@@ -1,0 +1,27 @@
+import requests
+from bs4 import BeautifulSoup
+from fake_useragent import FakeUserAgent
+import time
+url="https://www.bilibili.com"
+headers = {
+        "user-agent":FakeUserAgent().random,
+        "Cookie": "buvid3=ECED6ABB-D938-B2DE-6A3E-487C08D9EAE740396infoc; buvid4=7FDFF236-4293-8DB1-B072-C835BE96190C77849-022060709-zK8opySy52I5A4RiEfIDPQ==; b_nut=100; i-wanna-go-back=-1; nostalgia_conf=-1; buvid_fp_plain=undefined; DedeUserID=648473873; DedeUserID__ckMd5=7bf2091d3ea27629; b_ut=5; rpdid=|(u||)Yll~ml0J'uY~||lkYk|; header_theme_version=CLOSE; is-2022-channel=1; _uuid=EEED367D-C2E2-7EC1-1055B-F48DDD2C2AB889635infoc; CURRENT_PID=e7d9b8a0-d6ba-11ed-a045-8381db35a0c1; FEED_LIVE_VERSION=V8; fingerprint=519c86a052ca423e73fe5fdd70a0d7cc; hit-new-style-dyn=1; hit-dyn-v2=1; LIVE_BUVID=AUTO2416893155612668; CURRENT_QUALITY=0; CURRENT_FNVAL=4048; SESSDATA=296cc344,1708258350,e4ea9*82tBAkUU-GMwM9NKEsDbhjWcZbHmQ6pga1hoZnGstNmyGb9SKnMrK5B1IFDoc8M5NI9IcPsgAASQA; bili_jct=1b2c9a42683f0816f454e9b94448c842; bili_ticket=eyJhbGciOiJFUzM4NCIsImtpZCI6ImVjMDIiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjE2OTI5NjU5NzEsImlhdCI6MTY5MjcwNjc3MSwicGx0IjotMX0.EKzGPcQjHkKPloUT6_m006YG7Vz19tiWUTBODACokbEamgfmxBezA6Ld-xpmYvVT7sXcB4JjGl_PxoLfb9c9xJN12gST5HsAxCaVIwSIjB00YwclbovTF2LTIk7HQEot; bili_ticket_expires=1692965971; buvid_fp=519c86a052ca423e73fe5fdd70a0d7cc; PVID=2; home_feed_column=5; browser_resolution=1882-901; bp_video_offset_648473873=833351181621264391; b_lsid=3FA43951_18A29DE1C2B"
+    }
+
+r=requests.get(url,headers=headers)
+print(r.status_code)
+if r.status_code != 200:
+    print("sorry")
+    raise Exception()
+soup=BeautifulSoup(r.text,"html.parser")
+mcs=soup.find_all(class_="bili-video-card__info--tit")
+if mcs==None:
+    print("6")
+for mc in mcs:
+    jtmc=mc.find("a")
+    if jtmc==None:
+        print('none')
+        continue
+    print(jtmc.get("href"))
+    print(jtmc.get_text())
+    
