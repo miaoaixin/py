@@ -1,0 +1,44 @@
+import requests
+from bs4 import BeautifulSoup
+import re
+
+
+def dz_url():
+    root_url = "http://m.sbkk8.com/xiandai/jinyong/tianlongbabu/"
+    r = requests.get(root_url)
+    if r.status_code != 200:
+        print("wrong")
+        raise Exception()
+    r.encoding="gb2312"
+    soup = BeautifulSoup(r.text, "html.parser")
+    ls = soup.find_all("a")
+    data = []
+    for l in ls:
+        href = l.get("href")
+        pattern = r'^/xiandai/jinyong/tianlongbabu/\d+.html$'
+        if re.match(pattern, href):
+            data.append(("http://m.sbkk8.com%s" % href, l.get_text()))
+    return data
+
+
+def zw(url):
+    r = requests.get(url)
+    r.encoding = r.apparent_encoding
+    soup = BeautifulSoup(r.text, "html.parser")
+    return soup.find("div", id="articleContent").get_text()
+
+
+dz = dz_url()
+total_cnt = len(dz)
+idx = 0
+
+for chapter in dz:
+    idx += 1
+    print(idx, total_cnt)
+    url,title = chapter
+    character = '\/:*?"<>|'
+    for s in character:
+        if s in title:
+            title = title.replace(s, ' ')
+    with open("%s.txt" %title, "w",encoding="utf-8") as fout:
+        fout.write(zw(url))
