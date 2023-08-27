@@ -1,0 +1,24 @@
+import requests
+from bs4 import BeautifulSoup
+import os
+
+url="https://yys.163.com/media/picture.html"
+r=requests.get(url)
+if r.status_code!=200:
+    print("wrong")
+    raise Exception()
+"""div,class=cover
+a,2048×1536"""
+soup=BeautifulSoup(r.text,"html.parser")
+ls=soup.find_all("div",class_="cover")
+filename=1
+for l in ls:
+    tp_url=l.find("a",text="1920x1080")
+    if tp_url is None:
+        continue
+    href=tp_url.get("href")
+    print(tp_url.get("href"))
+    with open (f"yys图片壁纸/{filename}.jpg","wb") as f:
+        r_img=requests.get(href)
+        f.write(r_img.content)
+    filename+=1
